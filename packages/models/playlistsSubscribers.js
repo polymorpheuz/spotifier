@@ -1,37 +1,44 @@
 const AWS = require('aws-sdk');
-const dynamoDBClient = new AWS.DynamoDB.DocumentClient({ region: 'eu-central-1' });
+const dynamoDBClient = new AWS.DynamoDB.DocumentClient({ region: process.env.REGION });
 
-const { playlistsTable } = require('../tables');
+const playlistsSubscribersTable = process.env.PLAYLISTS_SUBSCRIBERS_TABLE;
 
-const get = (playlistId, chatId) => dynamoDBClient.get({
-  TableName: playlistSubscribersTable,
-  Key: {
-    playlistId,
-    ...(chatId ? { chatId } : {}),
-  },
+const get = (id, chatId) => dynamoDBClient.get({
+  TableName: playlistsSubscribersTable,
+  Key: { id, chatId },
 }).promise().then(result => result.Item);
 
-const getAllPlaylistEntries = (playlistId) => dynamoDBClient.query({
-  TableName: playlistSubscribersTable,
-  KeyConditionExpression: "playlistId = :pid",
+const getAllPlaylistEntries = (id) => dynamoDBClient.query({
+  TableName: playlistsSubscribersTable,
+  KeyConditionExpression: "id = :id",
   ExpressionAttributeValues: {
-    ":pid": playlistId
+    ":id": id
+  }
+}).promise().then(result => result.Items);
+
+const getAllChatIdEntries = (chatId) => dynamoDBClient.query({
+  TableName: playlistsSubscribersTable,
+  IndexName: 'chatIdIndex',
+  KeyConditionExpression: "chatId = :cid",
+  ExpressionAttributeValues: {
+    ":cid": chatId
   }
 }).promise().then(result => result.Items);
 
 const set = item => dynamoDBClient.put({
-  TableName: playlistSubscribersTable,
+  TableName: playlistsSubscribersTable,
   Item: item,
 }).promise();
 
-const remove = (playlistId, chatId) => dynamoDBClient.delete({
-  TableName: playlistSubscribersTable,
-  Key: { playlistId, chatId },
+const remove = (id, chatId) => dynamoDBClient.delete({
+  TableName: playlistsSubscribersTable,
+  Key: { id, chatId },
 }).promise();
 
 module.exports = {
   get,
   getAllPlaylistEntries,
+  getAllChatIdEntries,
   set,
   remove,
 };

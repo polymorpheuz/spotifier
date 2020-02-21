@@ -1,4 +1,4 @@
-service: spotifier-updater
+service: spotifier-notification-queue
 
 provider:
   name: aws
@@ -9,14 +9,14 @@ provider:
   versionFunctions: false
   environment:
     REGION: ${self:provider.region}
-    TELEGRAM_BOT_KEY: ${ssm:/telegramBotKey~true}
-    NOTIFICATION_QUEUE_TABLE: ${self:service.name}-notification-queue-${self:provider.stage}
+    TELEGRAM_BOT_KEY: ${ssm:/telegram-bot-key-${self:provider.stage}~true}
+    NOTIFICATION_QUEUE_TABLE: spotifier-notification-queue-${self:provider.stage}
   iamRoleStatements:
     - Effect: Allow
       Action:
         - ssm:GetParameter
       Resource:
-        - "arn:aws:ssm:${self:provider.region}:${self:custom.accountId}:parameter/telegramBotKey"
+        - "arn:aws:ssm:${self:provider.region}:${self:custom.accountId}:parameter/telegram-bot-key-${self:provider.stage}"
     - Effect: Allow
       Action:
         - dynamodb:PutItem
@@ -26,9 +26,12 @@ provider:
 
 functions:
   queue:
-    handler: playlists.handler
+    handler: index.handler
     events:
-      - schedule: cron(0 10 * * ? *)
+      - stream: "arn:aws:dynamodb:${self:provider.region}:${self:custom.accountId}:table/${self:provider.environment.NOTIFICATION_QUEUE_TABLE}/stream/${self:custom.streamTimestamp.${self:provider.stage}}"
 
 custom:
   accountId: 458799122057
+  streamTimestamp:
+    dev: "2020-02-19T20:27:35.399",
+    prod: "2020-02-21T16:40:39.250"

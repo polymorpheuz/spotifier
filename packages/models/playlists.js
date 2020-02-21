@@ -1,24 +1,24 @@
 const AWS = require('aws-sdk');
 const dynamoDBClient = new AWS.DynamoDB.DocumentClient({ region: process.env.REGION });
 
-const artistsTable = process.env.ARTISTS_TABLE;
+const playlistsTable = process.env.PLAYLISTS_TABLE;
 
 const get = id => dynamoDBClient.get({
-  TableName: artistsTable,
+  TableName: playlistsTable,
   Key: { id },
 }).promise().then(result => result.Item);
 
 const getAll = () => dynamoDBClient.scan({
-  TableName: artistsTable,
+  TableName: playlistsTable,
 }).promise().then(result => result.Items);
 
 const set = item => dynamoDBClient.put({
-  TableName: artistsTable,
+  TableName: playlistsTable,
   Item: item,
 }).promise();
 
 const remove = id => dynamoDBClient.delete({
-  TableName: artistsTable,
+  TableName: playlistsTable,
   Key: { id },
 }).promise();
 
