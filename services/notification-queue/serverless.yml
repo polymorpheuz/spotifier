@@ -33,5 +33,5 @@ functions:
 custom:
   accountId: 458799122057
   streamTimestamp:
-    dev: "2020-02-19T20:27:35.399",
+    dev: "2020-02-19T20:27:35.399"
     prod: "2020-02-21T16:40:39.250"
