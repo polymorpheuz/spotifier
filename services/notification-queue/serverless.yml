@@ -1,0 +1,34 @@
+service: spotifier-updater
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  # You can pass the region that is closer to you and your potential users
+  region: eu-central-1
+  stage: ${opt:stage}
+  versionFunctions: false
+  environment:
+    REGION: ${self:provider.region}
+    TELEGRAM_BOT_KEY: ${ssm:/telegramBotKey~true}
+    NOTIFICATION_QUEUE_TABLE: ${self:service.name}-notification-queue-${self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - ssm:GetParameter
+      Resource:
+        - "arn:aws:ssm:${self:provider.region}:${self:custom.accountId}:parameter/telegramBotKey"
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:DeleteItem
+      Resource:
+        - "arn:aws:dynamodb:${self:provider.region}:${self:custom.accountId}:table/${self:provider.environment.NOTIFICATION_QUEUE_TABLE}"
+
+functions:
+  queue:
+    handler: playlists.handler
+    events:
+      - schedule: cron(0 10 * * ? *)
+
+custom:
+  accountId: 458799122057
