@@ -17,7 +17,7 @@ jobs:
       - name: install dependencies
         run: yarn
       - name: create the package with shared code using lerna
-        run: lerna bootstrap
+        run: npx lerna bootstrap
       - run: mkdir -p node_modules/@spotifier
       - name: copy @spotifier package from root "node_modules" for lambdas "node_modules"
         run: cp -v -R -L node_modules/@spotifier/* services/bot/node_modules/@spotifier/ > /dev/null
