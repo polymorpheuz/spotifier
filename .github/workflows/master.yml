@@ -21,6 +21,8 @@ jobs:
       - run: mkdir -p services/bot/node_modules/@spotifier
       - name: copy @spotifier package from root "node_modules" for lambdas "node_modules"
         run: cp -v -R -L node_modules/@spotifier/* services/bot/node_modules/@spotifier/ > /dev/null
+      - name: navigatee in service folder
+        run: cd services/bot
       - name: serverless deploy
         uses: serverless/github-action@master
         with:
