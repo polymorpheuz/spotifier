@@ -1,6 +1,6 @@
 echo "$(tput setaf 3)Bot interface$(tput sgr0) lambda deploy on $1 stage"
 
-lerna bootstrap
+npx lerna bootstrap
 
 cd ../services/bot/
 
@@ -19,7 +19,7 @@ cp -v -R -L ../../node_modules/@spotifier/* node_modules/@spotifier/ > /dev/null
 
 echo 'Deploying lambda'
 
-sls deploy --stage $1 || exit 1
+npx sls deploy --stage $1 || exit 1
 
 echo 'Deploy was successfully completed'
 
