@@ -33,6 +33,7 @@ module.exports.interface = async (event) => {
     const chatId = data.message.chat.id.toString();
 
     if (playlistSubscribeRegex.test(message)) {
+      console.log('for the sake of change');
       const playlistId = parseEntityId(message, playlistSubscribeRegex);
       if (playlistId) {
         return await playlistSubscribe(chatId, playlistId);
