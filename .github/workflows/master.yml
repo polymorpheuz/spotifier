@@ -48,7 +48,7 @@ jobs:
         with:
           node-version: 12.x
       - name: give permission to the script
-        run: chmod u+x ./deploy/notifiacation-queue.sh
+        run: chmod u+x ./deploy/notification-queue.sh
       - name: Run deploy script
         run: yarn deploy:notification-queue:prod
         env:

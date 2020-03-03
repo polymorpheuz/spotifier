@@ -1,7 +1,5 @@
 echo "$(tput setaf 3)Bot interface$(tput sgr0) lambda deploy on $1 stage"
 
-npx lerna bootstrap
-
 if [ "$1" == "dev" ]; then
     lerna bootstrap
     echo "DEV"
