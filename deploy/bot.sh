@@ -19,7 +19,7 @@ cp -v -R -L ../../node_modules/@spotifier/* node_modules/@spotifier/ > /dev/null
 
 echo 'Deploying lambda'
 
-npx sls deploy --stage $1 || exit 1
+npx serverless deploy --stage $1 || exit 1
 
 echo 'Deploy was successfully completed'
 
