@@ -2,6 +2,14 @@ echo "$(tput setaf 3)Bot interface$(tput sgr0) lambda deploy on $1 stage"
 
 npx lerna bootstrap
 
+if [ "$1" == "dev" ]; then
+    lerna bootstrap
+    echo "DEV"
+else
+    echo "PROD"
+    npx lerna bootstrap
+fi
+
 cd ../services/bot/
 
 rm -Rf node_modules
@@ -19,7 +27,11 @@ cp -v -R -L ../../node_modules/@spotifier/* node_modules/@spotifier/ > /dev/null
 
 echo 'Deploying lambda'
 
-npx serverless deploy --stage $1 || exit 1
+if [ "$1" == "dev" ]; then
+    sls deploy --stage $1 || exit 1
+else
+    npx serverless deploy --stage $1 || exit 1
+fi
 
 echo 'Deploy was successfully completed'
 
