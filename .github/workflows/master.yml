@@ -23,7 +23,7 @@ jobs:
       - name: install local dependencies
         run: cd services/bot && yarn
       - name: serverless deploy
-        run: cd services/bot && npx sls deploy --stage prod || exit 1
+        run: cd services/bot && npx serverless deploy --stage prod || exit 1
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
